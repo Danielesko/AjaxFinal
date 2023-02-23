@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+    <input type="text" name="todo" id="todo">
+    <button onclick="validar()">Enviar</button>
+</form>
+</body>
+</html>
+<script>
+    function validar(){
+        let todo = document.getElementById("todo").value;
+        if(validarcorreo(todo) == false){
+            alert("error");
+        }else{
+            alert("correcto");
+        }
+    }
+    function validarnombre(dato){
+        let verdadero = true;
+        let ex = /^(?=.{1,40}$)[a-zA-ZáéíóúüñÁÉÍÓÚÑ]+(?:[\s][a-zA-ZáéíóúüñÁÉÍÓÚÑ]+)*$/;
+        if(!ex.test(dato)){
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validarapellidos(dato){
+        let verdadero = true;
+        let ex = /^(?=.{1,40}$)[a-zA-ZáéíóúüñÁÉÍÓÚÑ]+(?:[\s][a-zA-ZáéíóúüñÁÉÍÓÚÑ]+)*$/;
+        if(!ex.test(dato)){
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validardni(dato){
+        let verdadero = true;
+        let ex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+        if(!ex.test(dato)){
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validartlf(dato){
+        let verdadero = true;
+        let ex = /^[9|6|7][0-9]{8}$/;
+        if(!ex.test(dato)){
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validarclave10(dato){
+        let verdadero = true;
+        let ex = /[0-9]{8}$/;
+        if(!ex.test(dato)){
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validarcorreo(dato){
+        let verdadero = true;
+        let ex = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!ex.test(dato)){
+            verdadero = false;
+        }
+        return verdadero;
+    }
+</script>

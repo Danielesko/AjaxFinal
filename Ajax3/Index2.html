@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#enviar").click(enviar);
+
+            $("#registrate").click(function () {
+                $("#registro").show();
+            });
+            $("#siguiente").click(validarRegistro);
+
+            $("#volver").click(function () {
+                $("#registro").hide();
+            });
+
+            $("#oculto").click(function () {
+                $("#verificar").show();
+            });
+
+            $("#verifica").click(verificardatos);
+        });
+        function validardni(dato) {
+            let verdadero = true;
+            let ex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+            if (!ex.test(dato)) {
+                verdadero = false;
+            }
+            return verdadero;
+        }
+        function validarnombre(dato) {
+            let verdadero = true;
+            let ex = /^(?=.{1,40}$)[a-zA-ZáéíóúüñÁÉÍÓÚÑ]+(?:[\s][a-zA-ZáéíóúüñÁÉÍÓÚÑ]+)*$/;
+            if (!ex.test(dato)) {
+                verdadero = false;
+            }
+            return verdadero;
+        }
+        function validarclave10(dato) {
+            let verdadero = true;
+            let ex = /[0-9]{8}$/;
+            if (!ex.test(dato)) {
+                verdadero = false;
+            }
+            return verdadero;
+        }
+        function validarcorreo(dato) {
+            let verdadero = true;
+            let ex = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+            if (!ex.test(dato)) {
+                verdadero = false;
+            }
+            return verdadero;
+        }
+        function validartlf(dato) {
+            let verdadero = true;
+            let ex = /^[9|6|7][0-9]{8}$/;
+            if (!ex.test(dato)) {
+                verdadero = false;
+            }
+            return verdadero;
+        }
+        function validarapellidos(dato) {
+            let verdadero = true;
+            let ex = /^(?=.{1,40}$)[a-zA-ZáéíóúüñÁÉÍÓÚÑ]+(?:[\s][a-zA-ZáéíóúüñÁÉÍÓÚÑ]+)*$/;
+            if (!ex.test(dato)) {
+                verdadero = false;
+            }
+            return verdadero;
+        }
+        function enviar() {
+            let dni = document.getElementById("dni").value;
+            let clave = document.getElementById("clave").value;
+            if (validardni(dni) == true) {
+                if (validarclave10(clave) == true) {
+                    let peticion = $.ajax({
+                        url: "conectar2.php",
+                        type: "POST",
+                        data: {
+                            dni: dni,
+                            clave: clave
+                        },
+                        async: true,
+                        success: function (data) {
+                            $("#inserta").html(peticion.responseText);
+                        }, error: function (data) {
+                            alert("Errore en la trasmision");
+                        }
+                    })
+                } else {
+                    alert("CLAVE INCORRECTA");
+                }
+            } else {
+                alert("DNI MAL");
+            }
+
+        }
+        function validarRegistro() {
+            let nombre = document.getElementById("nombre").value;
+            let apellido1 = document.getElementById("apellido1").value;
+            let apellido2 = document.getElementById("apellido2").value;
+            let fechanaci = document.getElementById("fechanaci").value;
+            let dni = document.getElementById("nif").value;
+            let nacionalidad = document.getElementById("nacionalidad").value;
+            let sexo = document.getElementById("sexo").value;
+            let ads = document.getElementById("ads").value;
+            let categoria = document.getElementById("categoria").value;
+            let entidad = document.getElementById("entidad").value;
+            let correo = document.getElementById("correo").value;
+            let tlf = document.getElementById("tlf").value;
+            let movil = document.getElementById("movil").value;
+            let errores = [];
+            if (validarnombre(nombre) == false) {
+                errores.push("El nombre esta en el formato incorrecto" + "\n");
+            }
+            if (validarapellidos(apellido1) == false) {
+                errores.push("El apellido1 esta en el formato incorrecto" + "\n");
+            }
+            if (validarapellidos(apellido2) == false) {
+                errores.push("El apellido2 esta en el formato incorrecto" + "\n");
+            }
+            if (fechanaci == "") {
+                errores.push("La fecha no puede estar vacia" + "\n");
+            }
+            if (validardni(dni) == false) {
+                errores.push("El dni esta en el formato incorrecto" + "\n");
+            }
+            if (nacionalidad == "") {
+                errores.push("La nacionalidad no puede estar vacia" + "\n");
+            }
+            if (sexo == "") {
+                errores.push("El sexo no puece estar vacio" + "\n");
+            }
+            if (ads == "") {
+                errores.push("El ads no puede estar vacio" + "\n");
+            }
+            if (categoria == "") {
+                errores.push("La categoria no puede estar vacia" + "\n");
+            }
+            if (entidad == "") {
+                errores.push("La entidad no puede estar vacia" + "\n");
+            }
+            if (validarcorreo(correo) == false) {
+                errores.push("El correo esta en el formato incorrecto" + "\n");
+            }
+            if (validartlf(tlf) == false) {
+                errores.push("El tlf esta en el formato incorrecto" + "\n");
+            }
+            if (validartlf(movil) == false) {
+                errores.push("El movil esta en el formato incorrecto" + "\n");
+            }
+            if (errores.length == 0) {
+                let peticion2 = $.ajax({
+                    url: "conectar2.php",
+                    type: "POST",
+                    data: {
+                        dni: dni,
+                        nombre: nombre,
+                        apellido1: apellido1,
+                        apellido2: apellido2,
+                        fechanaci: fechanaci,
+                        nacionalidad: nacionalidad,
+                        sexo: sexo,
+                        ads: ads,
+                        categoria: categoria,
+                        entidad: entidad,
+                        correo: correo,
+                        tlf: tlf,
+                        movil: movil
+                    },
+                    async: true,
+                    success: function (data) {
+                        $("#respuestaregistro").html(peticion2.responseText);
+                    }, error: function (data) {
+                        alert("Errore en la trasmision");
+                    }
+                })
+            } else {
+                alert(errores);
+            }
+        }
+        function verificardatos() {
+                let fechanaci = document.getElementById("fechanaci2").value;
+                let dni = document.getElementById("nif2").value;
+                let errores = [];
+                if (fechanaci == "") {
+                    errores.push("La fecha no puede estar vacia" + "\n");
+                }
+                if (validardni(dni) == false) {
+                    errores.push("El dni esta en el formato incorrecto" + "\n");
+                }
+                if (errores.length == 0) {
+                    let peticion3 = $.ajax({
+                        url: "conectar2.php",
+                        type: "POST",
+                        data: {
+                            dni3: dni,
+                            fechanaci3: fechanaci
+                        },
+                        async: true,
+                        success: function (data) {
+                            $("#respuestaverficar").html(peticion3.responseText);
+                        }, error: function (data) {
+                            alert("Errore en la trasmision");
+                        }
+                    })
+                } else {
+                    alert(errores);
+                }
+            }
+    </script>
+</head>
+
+<body>
+    <h1>Entrada</h1>
+    <form>
+        <input type="text" name="dni" id="dni" placeholder="Dni">
+        <input type="text" name="clave" id="clave" placeholder="Clave"> <input type="button" id="enviar" value="enviar">
+    </form>
+    <p style="color: blue;" id="oculto">¿Has olvidado tu contraseña?</p>
+    <button id="registrate">Registro</button>
+    <h2>Nombre: y Proyectos</h2>
+    <div>
+        <p id="inserta"></p>
+    </div>
+
+
+    <div id="verificar" style="display: none; background-color: grey; margin-right: 55%;">
+        <h3>Verificacion de datos personales</h3>
+        <hr style="background-color: white;">
+        <form>
+            Documento de identidad*<input type="text" id="nif2" name="nif2"><br>
+            Fecha nacimiento*<input type="date" name="fechanaci2" id="fechanaci2" style="margin-left: 10%;"><br>
+            <input type="button" id="verifica" value="verifica">
+        </form>
+        <p id="respuestaverficar"></p>
+    </div>
+
+    <div id="registro" style="display: none; background-color: grey; margin-right: 55%;">
+        <h3>Datos de alta del usuario</h3>
+        <hr style="background-color: white;">
+        <form>
+            Nombre*<input type="text" name="nombre" id="nombre"> &nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Primer Apellido*<input type="text" name="apellido1"
+                id="apellido1" style="margin-left: 12%;"><br>
+            Segundo Apellido*<input type="text" name="apellido2" id="apellido2">Fecha nacimiento*<input type="date"
+                name="fechanaci" id="fechanaci" style="margin-left: 10%;"><br>
+            Documento de identidad*<input type="text" id="nif" name="nif"><br>
+            Nacionalidad*<input type="text" id="nacionalidad" name="nacionalidad"> Genero*<input type="text" name="sexo"
+                id="sexo"><br>
+            Tipo de adscripcion*<input type="text" name="ads" id="ads"><br>
+            Categoria profesional*<br>
+            <input type="text" name="categoria" id="categoria" style="width: 90%;"><br>
+            Entidad*<br>
+            <input type="text" name="entidad" id="entidad" style="width: 90%;"><br>
+            <h3>Datos de contacto</h3>
+            <hr style="background-color: white;">
+            Email*<input type="text" name="correo" id="correo"><br>
+            Telefono<input type="text" name="tlf" id="tlf">Movil<input type="text" id="movil" name="movil"><br>
+            <input type="button" id="siguiente" value="siguiente"><input type="button" name="volver" id="volver"
+                value="Volver">
+        </form>
+        <p id="respuestaregistro"></p>
+    </div>
+</body>
+
+</html>
