@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jquery-3.6.3.js"></script>
+</head>
+<script>
+    function oyente() {
+        let valordesplegable = parseFloat($("#tipo").val());
+        let resultado1 = parseFloat(document.getElementById("r1").value);
+        let suma = parseInt(resultado1 * valordesplegable);
+        document.getElementById("resultado").innerHTML = resultado1 + "x" + valordesplegable + "= ";
+        document.getElementById("resultado2").value = suma;
+        document.getElementById("resultado2").innerHTML = suma;
+    }
+    function calcular() {
+        let peso = parseFloat(document.getElementById("peso").value);
+        let altura = parseFloat(document.getElementById("altura").value);
+        let edad = parseInt(document.getElementById("edad").value);
+        let hola = document.getElementById("hola").value;
+        let solucion = "";
+        if (hola === 1) {
+            solucion = 66, 473 + ((13, 752 * peso) + (5, 0033 * altura) - (6, 755 * edad));
+        } else {
+            solucion = 655.0955 + (9.463 * peso) + (1.8496 * altura) - (4.6756 * edad);
+        }
+        document.getElementById("r1").value = solucion;
+    }
+    function validarcorreo(dato) {
+        let verdadero = true;
+        let ex = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!ex.test(dato)) {
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validarclave9(dato) {
+        let verdadero = true;
+        let ex = /^[0-9]{9}$/;
+        if (!ex.test(dato)) {
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    $(document).ready(function () {
+        $("#enviarlogin").click(validar);
+        $("#rellenar").hide();
+        $("#calculahombre").hide();
+        $("#registro").hide();
+        $("#baja").hide();
+        $("#recordar").hide();
+        $("#actualizardatos").hide();
+        $("#calculamujer").hide();
+        $("#registroboton").click(function () {
+            $("#registro").show();
+        });
+        $("#recordarboton").click(function () {
+            $("#recordar").show();
+        });
+        $("#guardarccid").click(guardarccid);
+        $("#registrarse").click(registrobd);
+        $("#recordar").click(recordarcontra);
+        $("#actualizarboton").click(function () {
+            $("#actualizardatos").show();
+        })
+        $("#actualizar").click(actualizardatos);
+        $("#bajaboton").click(function () {
+            $("#baja").show();
+        })
+        $("#hacerbaja").click(dartebaja);
+    })
+    function dartebaja() {
+        let correo6 = document.getElementById("correobaja").value;
+        let contra6 = document.getElementById("contrabaja").value;
+        let errores = [];
+
+        if(validarcorreo(correo6)==false){
+            errores.push("El correo esta en el formato incorrecto");
+        }
+        if(validarclave9(contra6)==false){
+            errores.push("La contraseña tiene que tener 9 numeros");
+        }
+        if(errores.length==0){
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "post",
+                async:true,
+                data:{
+                    contra6:contra6,
+                    correo6:correo6
+                },
+                success: function (data) {
+                    alert("Te has dado de baja");
+                }, error: function (data) {
+                    alert("Error en la hola");
+                }
+            })
+        }else{
+            alert(errores);
+        }
+    }
+    function actualizardatos() {
+        let correoactualizar = document.getElementById("correoactualizar").value;
+        let contraactualizar = document.getElementById("contraactualizar").value;
+        let nombreyapellidoactualizar = document.getElementById("nombreyapellidoactualizar").value;
+        let sexoactualizar = document.getElementById("sexoactualizar").value;
+        let fechanaciactualizar = document.getElementById("fechanaciactualizar").value;
+        let correo5 = document.getElementById("correo").value;
+        let contra5 = document.getElementById("contra").value;
+        let errores = [];
+
+        if(validarcorreo(correoactualizar) == false){
+            errores.push("El correo tiene el formato incorrecto");
+        }
+        if(validarclave9(contraactualizar)==false){
+            errores.push("La clave tiene que tener 9 numeros");
+        }
+        if(nombreyapellidoactualizar==""){
+            errores.push("El nombre no puede estar vacio");
+        }
+        if(sexoactualizar==""){
+            errores.push("El sexo tiene que estar seleccionado");
+        }
+        if(fechanaciactualizar==""){
+            errores.push("La fecha de nacimiento no puede estar vacia");
+        }
+        if(errores.length==0){
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "post",
+                data:{
+                    correoactualizar:correoactualizar,
+                    contraactualizar:contraactualizar,
+                    nombreyapellidoactualizar:nombreyapellidoactualizar,
+                    sexoactualizar:sexoactualizar,
+                    fechanaciactualizar:fechanaciactualizar,
+                    correo5:correo5,
+                    contra5:contra5
+                },
+                async:true,
+                success: function (data) {
+                }, error: function (data) {
+                    alert("Error en la trasmision");
+                }
+            })
+        }else{
+            alert(errores);
+        }
+    }
+    function recordarcontra() {
+        let correo4 = document.getElementById("emailrecordar").value;
+        let fecha4 = document.getElementById("fecharecordar").value;
+        let errores = [];
+
+        if(validarcorreo(correo4)==false){
+            errores.push("El correo esta en un formato incorrecto");
+        }
+        if(fecha4==""){
+            errores.push("La fecha no puede estar vacia");
+        }
+        if(errores.length==0){
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "post",
+                async:true,
+                data:{
+                    correo4:correo4,
+                    fecha4:fecha4
+                },
+                success: function (data) {
+                    alert("Tu contraseña es " + peticion.responseText);
+
+                }, error: function (data) {
+                    alert("Error en la trasmision");
+                }
+            })
+        }else{
+            alert(errores);
+        }
+    }
+    function registrobd() {
+        let correo3 = document.getElementById("correo3").value;
+        let contra3 = document.getElementById("contra3").value;
+        let nombreyapellido = document.getElementById("nombreyapellido").value;
+        let sexo = document.getElementById("sexo").value;
+        let fechanaci = document.getElementById("fechanaci").value;
+        let errores = [];
+
+        if(validarcorreo(correo3) == false){
+            errores.push("El correo tiene el formato incorrecto");
+        }
+        if(validarclave9(contra3)==false){
+            errores.push("La clave tiene que tener 9 numeros");
+        }
+        if(nombreyapellido==""){
+            errores.push("El nombre no puede estar vacio");
+        }
+        if(sexo==""){
+            errores.push("El sexo tiene que estar seleccionado");
+        }
+        if(fechanaci==""){
+            errores.push("La fecha de nacimiento no puede estar vacia");
+        }
+        if(errores.length==0){
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "post",
+                data:{
+                    correo3:correo3,
+                    contra3:contra3,
+                    nombreyapellido:nombreyapellido,
+                    sexo:sexo,
+                    fechanaci:fechanaci
+                },
+                async:true,
+                success: function (data) {
+                }, error: function (data) {
+                    alert("Error en la trasmision");
+                }
+            })
+        }else{
+            alert(errores);
+        }
+    }
+    function guardarccid() {
+        let ccid = document.getElementById("resultado2").value;
+        let correo2 = document.getElementById("correo").value;
+        if (ccid == "") {
+            alert("El ccid no puede estar vacio");
+        } else {
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "POST",
+                data: {
+                    ccid: ccid,
+                    correo2: correo2
+                },
+                async: true,
+                success: function (data) {
+                },
+                error: function (data) {
+                    alert("Error en la trasmision");
+                }
+            })
+        }
+    }
+    function validar() {
+        let correo = document.getElementById("correo").value;
+        let contra = document.getElementById("contra").value;
+        let errores = [];
+        if (validarcorreo(correo) == false) {
+            errores.push("El correo esta en un formato incorrecto \n");
+        }
+        if (validarclave9(contra) == false) {
+            errores.push("La contraseña debe tener 9 caracteres");
+        }
+        if (errores.length == 0) {
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "POST",
+                data: {
+                    correo: correo,
+                    contra: contra
+                },
+                async: true,
+                success: function (data) {
+                    $("#usuarioregistrado").html(peticion.responseText);
+                }, error: function (data) {
+                    alert("Error en la trasmision");
+                }
+            })
+        } else {
+            alert(errores);
+        }
+    }
+</script>
+
+<body>
+    <h1>La alimentacion y la salud</h1>
+    <div style="background-color: yellow; text-align: center;">
+        <form>
+            Email:<input type="text" name="correo" id="correo"><br>
+            Password: <input type="password" name="contra" id="contra"><br>
+            <input type="button" name="boton" value="Enviar" id="enviarlogin">
+            <input type="button" name="boton" value="Registro" id="registroboton">
+            <input type="button" name="boton" value="Recordar" id="recordarboton">
+            <input type="button" name="boton" value="Actualizar" id="actualizarboton">
+            <input type="button" name="boton" value="baja" id="bajaboton">
+        </form>
+    </div>
+    <div>
+        <div id="usuarioregistrado" style="border: 1px solid;">
+
+        </div>
+        <div>
+            <p id='resultado2'></p>
+            <input type="button" id="guardarccid" value="Guardarccid">
+            </form>
+        </div>
+    </div>
+    <div id="registro">
+        Email:<input type="text" id="correo3"><br>
+        Password:(9num)<input type="password" id="contra3"><br>
+        Nombre y apellidos: <input type="text" id="nombreyapellido"><br>
+        Sexo: <select name='sexo' id='sexo'>
+            <option value='Hombre'>Hombre</option>
+            <option value='Mujer'>Mujer</option>
+        </select><br>
+        fecha de nacimiento:<input type="date" id="fechanaci"><br>
+        <input type="button" id="registrarse" value="registrarse">
+    </div>
+    <div id="recordar">
+        Email:<input type="text" id="emailrecordar"><br>
+        Fecha nacimiento:<input type="date" id="fecharecordar"><br>
+        <input type="button" id="recordar" value="recordar">
+        <p id=""></p>
+    </div>
+    <div id="actualizardatos">
+        Email:<input type="text" id="correoactualizar"><br>
+        Password:(9num)<input type="password" id="contraactualizar"><br>
+        Nombre y apellidos: <input type="text" id="nombreyapellidoactualizar"><br>
+        Sexo: <select name='sexo' id='sexoactualizar'>
+            <option value='Hombre'>Hombre</option>
+            <option value='Mujer'>Mujer</option>
+        </select><br>
+        fecha de nacimiento:<input type="date" id="fechanaciactualizar"><br>
+        <input type="button" id="actualizar" value="actualizar">
+    </div>
+    <div id="baja">
+        correo<input type="text" id="correobaja"><br>
+        contra<input type="password" id="contrabaja"><br>
+        <input type="button" id="hacerbaja" value="baja">
+    </div>
+</body>
+
+</html>
