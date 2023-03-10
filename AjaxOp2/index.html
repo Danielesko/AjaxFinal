@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jquery-3.6.3.js"></script>
+</head>
+<script>
+    function validarmatriculas(dato) {
+        let verdadero = true;
+        // ^([A-Z]{1,2})?\d{4}([A-Z]{2,3})$
+        let ex = /(\d{4}[\D\w]{3}|[\D\w]{1,2}\d{4}[\D\\w]{2})/;
+        if (!ex.test(dato)) {
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    function validarclave6(dato) {
+        let verdadero = true;
+        let ex = /[0-9]{6}$/;
+        if (!ex.test(dato)) {
+            verdadero = false;
+        }
+        return verdadero;
+    }
+    $(document).ready(function () {
+        $("#login").click(validar);
+        $("#formu").hide();
+        $("#registro").hide();
+        $("#respuesta").hide();
+        $("#respuesta").mouseenter(cambia);
+        $("#registro").click(function () {
+            $("#formu").show();
+        });
+        $("#formuboton").click(registro);
+    });
+    function registro() {
+        let matricula2 = document.getElementById("matricula2").value;
+        let ano = document.getElementById("ano").value;
+
+        let peticion = $.ajax({
+            url: "conectar.php",
+            type: "POST",
+            data: {
+                matricula2: matricula2,
+                ano: ano
+            },
+            async: true,
+            success: function (data) {
+                $("#respuestaregistro").html(peticion.responseText);
+            }, error: function (data) {
+                alert("Error en la trasmision");
+            }
+        })
+
+
+    }
+    function validar() {
+        let matricula = document.getElementById("matricula").value;
+        let clave = document.getElementById("clave").value;
+        let errores = [];
+        if (validarmatriculas(matricula) == false) {
+            errores.push("La matricula no esta en un formato correcto \n");
+        }
+        if (validarclave6(clave) == false) {
+            errores.push("La clave tiene que tener 6 caracteres");
+        }
+        if (errores.length == 0) {
+            $("#respuesta").show();
+            let peticion = $.ajax({
+                url: "conectar.php",
+                type: "POST",
+                data: {
+                    matricula: matricula,
+                    clave: clave
+                },
+                async: true,
+                success: function (data) {
+                    $("#respuesta").html(peticion.responseText);
+                }, error: function (data) {
+                    alert("Error en la trasmision");
+                }
+            })
+            $("#registro").show();
+        } else {
+            alert(errores);
+        }
+    }
+    function cambia() {
+        let color = document.getElementById("colorcito").value;
+        if (color == "verde") {
+            document.getElementById("foto").innerHTML = "<img src='verde.jpg'>";
+        } else if (color == "rojo") {
+            document.getElementById("foto").innerHTML = "<img src='rojo.jpg'>";
+        } else if (color == "azul") {
+            document.getElementById("foto").innerHTML = "<img src='azul.jpg'>";
+        } else if (color == "verdeazul") {
+            document.getElementById("foto").innerHTML = "<img src='verdeazul.jpg'>";
+        } else if (color == "amarillo") {
+            document.getElementById("foto").innerHTML = "<img src='amarillo.jpg'>";
+        }
+    }
+</script>
+
+<body>
+    <form>
+        Matricula:<input type="text" id="matricula"><br>
+        Clave:<input type="password" id="clave"><br>
+        <input type="button" id="login" value="Enviar">
+    </form>
+    <div id="respuesta">
+
+
+    </div>
+    <input type="button" id="registro" value="PULSAR SOLO SI QUIERE REGISTRARSE">
+    <div id="foto">
+
+    </div>
+    <div id="formu">
+        <form>
+            matricula:<input type="text" id="matricula2"><br>
+            año de matriculacion:<input type="text" id="ano"><br>
+            <input type="button" id="formuboton" value="enviar">
+        </form>
+    </div>
+    <div id="respuestaregistro">
+
+    </div>
+</body>
+
+</html>
